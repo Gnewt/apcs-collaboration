@@ -51,8 +51,20 @@
               <div class="form-group">
                 <input type="text" id="padKey" class="form-control" placeholder="Key">
               </div>
-              <button type="submit" id="goButton" class="btn btn-default">Go</a>
+              <button type="submit" id="goButton" class="btn btn-default">Go</button>
             </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Shortcuts <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <form id="classForm" class="navbar-form navbar-right">
+                        <div class="form-group">
+                            <input type="text" id="className" class="form-control" placeholder="Class name">
+                        </div>
+                    </form>
+                  </ul>
+                </li>
+            </ul>
         </div><!--/.nav-collapse -->
       </div>
 
@@ -82,14 +94,12 @@
           firepadRef = new Firebase('https://nickmooney.firebaseio.com/firepads/apcs-' + md5Key);
           codeMirror = CodeMirror(document.getElementById('firepad'), { 
               lineNumbers: true,
+              tabSize: 4,
+              indentUnit: 4,
               mode: 'text/x-java'
           });
           firepad = Firepad.fromCodeMirror(firepadRef, codeMirror);
       }
-      $('#keyForm').submit(function(e) {
-         createPadFromKey($('#padKey').val());
-         e.preventDefault();
-      });
       
       function localStorageAvailable() {
           var test = 'test';
@@ -101,6 +111,18 @@
               return false;
           }
       }
+      
+      $('#keyForm').submit(function(e) {
+         createPadFromKey($('#padKey').val());
+         e.preventDefault();
+      });
+      
+      $('#classForm').submit(function(e) {
+          var className = $('#className').val();
+          var classOutline = "public class " + className + " {\n    public static void main(String args[]) {\n        // code here\n    }\n}"
+          firepad.setText(classOutline);
+          e.preventDefault();
+      });
       
       $(document).ready(function() {
           if (localStorageAvailable()) {
