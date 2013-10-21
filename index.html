@@ -73,6 +73,9 @@
       var codeMirror = null;
       var firepad = null;
       function createPadFromKey(key) {
+          if (localStorage) {
+              localStorage["apcs-lastKey"] = key;
+          }
           $('#firepad').empty();
           var md5Key = md5(key.toLowerCase().replace(/ /g, ''));
           firepadRef = new Firebase('https://nickmooney.firebaseio.com/firepads/apcs-' + md5Key);
@@ -86,6 +89,16 @@
          createPadFromKey($('#padKey').val());
          e.preventDefault();
       });
+      
+      $(document).ready(function() {
+          if (localStorage) {
+              var lastKey = localStorage["apcs-lastKey"];
+              if (lastKey) {
+                  $('#padKey').val(lastKey);
+                  createPadFromKey(lastKey);
+              }
+          }
+      })
     </script>
   </body>
 </html>
