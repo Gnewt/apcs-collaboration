@@ -72,8 +72,9 @@
       var firepadRef = null;
       var codeMirror = null;
       var firepad = null;
+      
       function createPadFromKey(key) {
-          if (localStorage) {
+          if (localStorageAvailable()) {
               localStorage["apcs-lastKey"] = key;
           }
           $('#firepad').empty();
@@ -90,8 +91,19 @@
          e.preventDefault();
       });
       
+      function localStorageAvailable() {
+          var test = 'test';
+          try {
+              localStorage.setItem(test, test);
+              localStorage.removeItem(test);
+              return true;
+          } catch(e) {
+              return false;
+          }
+      }
+      
       $(document).ready(function() {
-          if (localStorage) {
+          if (localStorageAvailable()) {
               var lastKey = localStorage["apcs-lastKey"];
               if (lastKey) {
                   $('#padKey').val(lastKey);
