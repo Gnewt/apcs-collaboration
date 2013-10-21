@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>APCS Code Editor</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/navbar-padding.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->
+    
+    <!-- Include Firebase -->
+    <script src="https://cdn.firebase.com/v0/firebase.js"></script>
+    
+    <!-- Include CodeMirror -->
+    <script src="codemirror/lib/codemirror.js"></script>
+    <script src="codemirror/mode/clike/clike.js"></script>
+    <link rel="stylesheet" href="codemirror/lib/codemirror.css" />
+
+    <link rel="stylesheet" href="firepad.css" />
+    <script src="firepad.js"></script>
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <!-- Static navbar -->
+      <div class="navbar navbar-default">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Code editor</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <form id="keyForm" class="navbar-form navbar-left">
+              <div class="form-group">
+                <input type="text" id="padKey" class="form-control" placeholder="Key">
+              </div>
+              <button type="submit" id="goButton" class="btn btn-default">Go</a>
+            </form>
+        </div><!--/.nav-collapse -->
+      </div>
+
+      <div id="firepad"></div>
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/md5.js"></script>
+    
+    <script>
+      var firepadRef = null;
+      var codeMirror = null;
+      var firepad = null;
+      function createPadFromKey(key) {
+          $('#firepad').empty();
+          var md5Key = md5(key.toLowerCase());
+          firepadRef = new Firebase('https://nickmooney.firebaseio.com/firepads/apcs-' + md5Key);
+          codeMirror = CodeMirror(document.getElementById('firepad'), { 
+              lineNumbers: true,
+              mode: 'text/x-java'
+          });
+          firepad = Firepad.fromCodeMirror(firepadRef, codeMirror);
+      }
+      $('#keyForm').submit(function(e) {
+         createPadFromKey($('#padKey').val());
+         e.preventDefault();
+      });
+    </script>
+  </body>
+</html>
