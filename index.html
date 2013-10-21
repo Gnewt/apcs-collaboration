@@ -74,7 +74,7 @@
       var firepad = null;
       function createPadFromKey(key) {
           $('#firepad').empty();
-          var md5Key = md5(key.toLowerCase());
+          var md5Key = md5(key.toLowerCase().replace(/ /g, ''));
           firepadRef = new Firebase('https://nickmooney.firebaseio.com/firepads/apcs-' + md5Key);
           codeMirror = CodeMirror(document.getElementById('firepad'), { 
               lineNumbers: true,
